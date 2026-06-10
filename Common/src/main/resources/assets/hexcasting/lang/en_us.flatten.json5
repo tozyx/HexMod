@@ -343,31 +343,43 @@
         ctrlTogglesOffStrokeOrder: {
           "": "Ctrl Toggles Off Stroke Order",
           "@Tooltip": "Whether the ctrl key will instead turn *off* the color gradient on patterns",
+          tooltip: "Whether the ctrl key will instead turn *off* the color gradient on patterns",
         },
         disableInworldScrolling: {
           "": "Disable In-World Scrolling",
-          "@Tooltip": "Disable scrolling input for spellbooks and abaci in the normal world, keeping keybinds and staff screen scrolling normal"
+          "@Tooltip": "Disable scrolling input for spellbooks and abaci in the normal world, keeping keybinds and staff screen scrolling normal",
+          tooltip: "Disable scrolling input for spellbooks and abaci in the normal world, keeping keybinds and staff screen scrolling normal",
         },
         invertSpellbookScrollDirection: {
           "": "Invert Spellbook Scroll Direction",
           "@Tooltip": "Whether scrolling up (as opposed to down) will increase the page index of the spellbook, and vice versa",
+          tooltip: "Whether scrolling up (as opposed to down) will increase the page index of the spellbook, and vice versa",
+        },
+        scrollInPatchouliBooksTurnsPages: {
+          "": "Patchouli Book Scroll Turns Pages",
+          "@Tooltip": "Whether vertical mouse scrolling in Patchouli books turns pages",
+          tooltip: "Whether vertical mouse scrolling in Patchouli books turns pages",
         },
         invertAbacusScrollDirection: {
           "": "Invert Abacus Scroll Direction",
           "@Tooltip": "Whether scrolling up (as opposed to down) will increase the value of the abacus, and vice versa",
+          tooltip: "Whether scrolling up (as opposed to down) will increase the value of the abacus, and vice versa",
         },
         gridSnapThreshold: {
           "": "Grid Snap Threshold",
           "@Tooltip": "When using a staff, the distance from one dot you have to go to snap to the next dot, where 0.5 means 50% of the way (0.5-1)",
+          tooltip: "When using a staff, the distance from one dot you have to go to snap to the next dot, where 0.5 means 50% of the way (0.5-1)",
         },
         clickingTogglesDrawing: {
           "": "Clicking Toggles Drawing",
           "@Tooltip": "Whether you click to start and stop drawing instead of clicking and dragging to draw",
+          tooltip: "Whether you click to start and stop drawing instead of clicking and dragging to draw",
         },
         staticActiveSlates: {
           "": "Static Active Slates",
           "@Tooltip": "Whether patterns on active slates should be rendered without wobble (improves performance with lots of active slates)",
-        }
+          tooltip: "Whether patterns on active slates should be rendered without wobble (improves performance with lots of active slates)",
+        },
       },
       
       server: {
@@ -394,6 +406,21 @@
         greaterTeleportSplatsItems: {
           "": "Greater Teleport Splats Items",
           "@Tooltip": "Whether items should fly out of the player's inventory when using Greater Teleport"
+        },
+        createDeployerOvercastUsesVirtualHealth: {
+          "": "Create Deployer Overcast",
+          "@Tooltip": "Whether Create deployers can pay overcast media costs from a per-cast virtual health pool",
+          tooltip: "Whether Create deployers can pay overcast media costs from a per-cast virtual health pool",
+        },
+        pehkuiMinScale: {
+          "": "Pehkui Minimum Scale",
+          "@Tooltip": "Minimum entity scale Hex Casting can set through Pehkui/Gulliver interop",
+          tooltip: "Minimum entity scale Hex Casting can set through Pehkui/Gulliver interop",
+        },
+        pehkuiMaxScale: {
+          "": "Pehkui Maximum Scale",
+          "@Tooltip": "Maximum entity scale Hex Casting can set through Pehkui/Gulliver interop",
+          tooltip: "Maximum entity scale Hex Casting can set through Pehkui/Gulliver interop",
         },
         doesTrueNameHaveAmbit: {
           "": "Does True Name Have Ambit",

@@ -334,26 +334,42 @@
         ctrlTogglesOffStrokeOrder: {
           "": "Ctrl关闭笔顺显示",
           "@Tooltip": "按下Ctrl键时*关闭*图案渐变显示，而非按下时打开",
+          tooltip: "按下Ctrl键时*关闭*图案渐变显示，而非按下时打开",
+        },
+        disableInworldScrolling: {
+          "": "禁用世界内滚轮操作",
+          "@Tooltip": "禁用普通世界中对法术书和算盘的滚轮输入，保留快捷键和法杖界面中的滚轮操作",
+          tooltip: "禁用普通世界中对法术书和算盘的滚轮输入，保留快捷键和法杖界面中的滚轮操作",
         },
         invertSpellbookScrollDirection: {
           "": "反转法术书滚轮方向",
           "@Tooltip": "向上滚动滚轮（而非向下）增加法术书当前页页码，反之亦然",
+          tooltip: "向上滚动滚轮（而非向下）增加法术书当前页页码，反之亦然",
+        },
+        scrollInPatchouliBooksTurnsPages: {
+          "": "Patchouli书滚轮翻页",
+          "@Tooltip": "是否允许在Patchouli书中用鼠标纵向滚轮翻页",
+          tooltip: "是否允许在Patchouli书中用鼠标纵向滚轮翻页",
         },
         invertAbacusScrollDirection: {
           "": "反转算盘滚轮方向",
           "@Tooltip": "向上滚动滚轮（而非向下）增加算盘计数，反之亦然",
+          tooltip: "向上滚动滚轮（而非向下）增加算盘计数，反之亦然",
         },
         gridSnapThreshold: {
           "": "咒术网格吸附阈值",
           "@Tooltip": "使用法杖时，吸附至另一点所需划过的距离，0.5意味着需划过50%（取值0.5~1）",
+          tooltip: "使用法杖时，吸附至另一点所需划过的距离，0.5意味着需划过50%（取值0.5~1）",
         },
         clickingTogglesDrawing: {
           "": "单击切换绘制与否",
           "@Tooltip": "单击即可开始或结束绘制，无需按住拖动",
+          tooltip: "单击即可开始或结束绘制，无需按住拖动",
         },
-        alwaysShowListCommas: {
-          "": "在所有情况下都显示列表逗号",
-          "@Tooltip": "是否用逗号分隔列表中各种类型的iota（默认情况下，图案iota不会使用逗号分隔）",
+        staticActiveSlates: {
+          "": "静态活跃石板",
+          "@Tooltip": "活跃石板上的图案是否不再晃动渲染（大量活跃石板时可改善性能）",
+          tooltip: "活跃石板上的图案是否不再晃动渲染（大量活跃石板时可改善性能）",
         },
       },
 
@@ -381,6 +397,21 @@
         greaterTeleportSplatsItems: {
           "": "卓越传送散落物品",
           "@Tooltip": "使用卓越传送时，玩家物品栏中的物品是否会飞出"
+        },
+        createDeployerOvercastUsesVirtualHealth: {
+          "": "机械手过度施法",
+          "@Tooltip": "是否允许机械动力机械手使用每次施法独立计算的虚拟生命值来支付过度施法媒质消耗",
+          tooltip: "是否允许机械动力机械手使用每次施法独立计算的虚拟生命值来支付过度施法媒质消耗",
+        },
+        pehkuiMinScale: {
+          "": "Pehkui最小缩放",
+          "@Tooltip": "Hex Casting通过Pehkui/格列佛联动可设置的实体最小缩放",
+          tooltip: "Hex Casting通过Pehkui/格列佛联动可设置的实体最小缩放",
+        },
+        pehkuiMaxScale: {
+          "": "Pehkui最大缩放",
+          "@Tooltip": "Hex Casting通过Pehkui/格列佛联动可设置的实体最大缩放",
+          tooltip: "Hex Casting通过Pehkui/格列佛联动可设置的实体最大缩放",
         },
         doesTrueNameHaveAmbit: {
           "": "真名是否受影响范围限制",

@@ -7,6 +7,7 @@ import at.petrak.hexcasting.api.casting.eval.CastingEnvironment
 import at.petrak.hexcasting.api.casting.getDoubleBetween
 import at.petrak.hexcasting.api.casting.getEntity
 import at.petrak.hexcasting.api.casting.iota.Iota
+import at.petrak.hexcasting.api.mod.HexConfig
 import at.petrak.hexcasting.xplat.IXplatAbstractions
 import net.minecraft.world.entity.Entity
 
@@ -18,7 +19,7 @@ object OpSetScale : SpellAction {
             env: CastingEnvironment
     ): SpellAction.Result {
         val target = args.getEntity(env.world, 0, argc)
-        val scale = args.getDoubleBetween(1, 1.0 / 32.0, 8.0, argc)
+        val scale = args.getDoubleBetween(1, HexConfig.server().pehkuiMinScale(), HexConfig.server().pehkuiMaxScale(), argc)
         env.assertEntityInRange(target)
 
         return SpellAction.Result(

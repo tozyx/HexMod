@@ -28,15 +28,21 @@ import java.util.UUID;
 public class EntityIota extends Iota {
     private final UUID entityId;
     @Nullable
+    private final WeakReference<Entity> entityRef;
+    @Nullable
     private final Component entityName;
 
     public EntityIota(@NotNull Entity e) {
-        this(e.getUUID(), getEntityNameWithInline(e));
+        super(() -> HexIotaTypes.ENTITY);
+        this.entityId = e.getUUID();
+        this.entityRef = new WeakReference<>(e);
+        this.entityName = getEntityNameWithInline(e);
     }
 
     public EntityIota(UUID entityId, @Nullable Component entityName) {
         super(() -> HexIotaTypes.ENTITY);
         this.entityId = entityId;
+        this.entityRef = null;
         this.entityName = entityName;
     }
 
@@ -45,6 +51,12 @@ public class EntityIota extends Iota {
     }
 
     public Entity getEntity(ServerLevel level) {
+        if (this.entityRef != null) {
+            var entity = this.entityRef.get();
+            if (entity != null && !entity.isRemoved() && entity.level() == level) {
+                return entity;
+            }
+        }
         return level.getEntity(entityId);
     }
 

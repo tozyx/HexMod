@@ -132,6 +132,8 @@ public class FabricHexConfig extends PartitioningSerializer.GlobalData {
         @ConfigEntry.Gui.Tooltip
         private boolean invertSpellbookScrollDirection = DEFAULT_INVERT_SPELLBOOK_SCROLL;
         @ConfigEntry.Gui.Tooltip
+        private boolean scrollInPatchouliBooksTurnsPages = DEFAULT_SCROLL_IN_PATCHOULI_BOOKS_TURNS_PAGES;
+        @ConfigEntry.Gui.Tooltip
         private boolean invertAbacusScrollDirection = DEFAULT_INVERT_ABACUS_SCROLL;
         @ConfigEntry.Gui.Tooltip
         private double gridSnapThreshold = DEFAULT_GRID_SNAP_THRESHOLD;
@@ -158,6 +160,11 @@ public class FabricHexConfig extends PartitioningSerializer.GlobalData {
         @Override
         public boolean invertSpellbookScrollDirection() {
             return invertSpellbookScrollDirection;
+        }
+
+        @Override
+        public boolean scrollInPatchouliBooksTurnsPages() {
+            return scrollInPatchouliBooksTurnsPages;
         }
 
         @Override
@@ -198,6 +205,12 @@ public class FabricHexConfig extends PartitioningSerializer.GlobalData {
         private boolean villagersOffendedByMindMurder = DEFAULT_VILLAGERS_DISLIKE_MIND_MURDER;
         @ConfigEntry.Gui.Tooltip
         private boolean doesTrueNameHaveAmbit = DEFAULT_TRUE_NAME_HAS_AMBIT;
+        @ConfigEntry.Gui.Tooltip
+        private boolean createDeployerOvercastUsesVirtualHealth = DEFAULT_CREATE_DEPLOYER_OVERCAST_USES_VIRTUAL_HEALTH;
+        @ConfigEntry.Gui.Tooltip
+        private double pehkuiMinScale = DEFAULT_PEHKUI_MIN_SCALE;
+        @ConfigEntry.Gui.Tooltip
+        private double pehkuiMaxScale = DEFAULT_PEHKUI_MAX_SCALE;
         @ConfigEntry.Gui.Tooltip
         private List<String> tpDimDenylist = DEFAULT_DIM_TP_DENYLIST;
         
@@ -240,6 +253,13 @@ public class FabricHexConfig extends PartitioningSerializer.GlobalData {
             this.maxOpCount = Math.max(this.maxOpCount, 0);
             this.maxSpellCircleLength = Math.max(this.maxSpellCircleLength, 4);
             this.traderScrollChance = Mth.clamp(this.traderScrollChance, 0.0, 1.0);
+            this.pehkuiMinScale = Mth.clamp(this.pehkuiMinScale, MIN_ALLOWED_PEHKUI_SCALE, MAX_ALLOWED_PEHKUI_SCALE);
+            this.pehkuiMaxScale = Mth.clamp(this.pehkuiMaxScale, MIN_ALLOWED_PEHKUI_SCALE, MAX_ALLOWED_PEHKUI_SCALE);
+            if (this.pehkuiMinScale > this.pehkuiMaxScale) {
+                double oldMin = this.pehkuiMinScale;
+                this.pehkuiMinScale = this.pehkuiMaxScale;
+                this.pehkuiMaxScale = oldMin;
+            }
 
             this.scrollInjections = new Object2IntOpenHashMap<>();
             try {
@@ -320,6 +340,21 @@ public class FabricHexConfig extends PartitioningSerializer.GlobalData {
         @Override
         public boolean trueNameHasAmbit() {
             return doesTrueNameHaveAmbit;
+        }
+
+        @Override
+        public boolean createDeployerOvercastUsesVirtualHealth() {
+            return createDeployerOvercastUsesVirtualHealth;
+        }
+
+        @Override
+        public double pehkuiMinScale() {
+            return pehkuiMinScale;
+        }
+
+        @Override
+        public double pehkuiMaxScale() {
+            return pehkuiMaxScale;
         }
 
         public double traderScrollChance() {

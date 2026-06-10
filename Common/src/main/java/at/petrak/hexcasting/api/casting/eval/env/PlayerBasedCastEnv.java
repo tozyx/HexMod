@@ -41,6 +41,8 @@ import static at.petrak.hexcasting.api.utils.HexUtils.isOfTag;
  * if executed patterns should be displayed in a spiral around the caster.
  */
 public abstract class PlayerBasedCastEnv extends CastingEnvironment {
+    private static final String CREATE_DEPLOYER_FAKE_PLAYER = "com.simibubi.create.content.kinetics.deployer.DeployerFakePlayer";
+
     public static final double DEFAULT_AMBIT_RADIUS = 32.0;
     private double ambitRadius;
     public static final double DEFAULT_SENTINEL_RADIUS = 16.0;
@@ -160,17 +162,22 @@ public abstract class PlayerBasedCastEnv extends CastingEnvironment {
             double mediaToHealth = HexConfig.common().mediaToHealthRate();
             double healthToRemove = Math.max(costLeft / mediaToHealth, 0.5);
             if (simulate) {
-                long simulatedRemovedMedia = Mth.ceil(Math.min(this.caster.getHealth(), healthToRemove) * mediaToHealth);
-                if (this.caster.isInvulnerableTo(this.caster.damageSources().source(HexDamageTypes.OVERCAST))) {
-                    simulatedRemovedMedia = 0;
-                }
-                costLeft -= simulatedRemovedMedia;
+                costLeft -= this.getMediaAvailableFromOvercast(healthToRemove, mediaToHealth);
             } else {
-                var mediaAbleToCastFromHP = this.caster.getHealth() * mediaToHealth;
+                int actuallyTaken;
+                if (this.usesCreateDeployerVirtualOvercast()) {
+                    actuallyTaken = this.getMediaAvailableFromOvercast(healthToRemove, mediaToHealth);
+                } else {
+                    var mediaAbleToCastFromHP = this.caster.getHealth() * mediaToHealth;
 
-                Mishap.trulyHurt(this.caster, this.world.damageSources().source(HexDamageTypes.OVERCAST), (float) healthToRemove);
+                    Mishap.trulyHurt(
+                        this.caster,
+                        this.world.damageSources().source(HexDamageTypes.OVERCAST),
+                        (float) healthToRemove
+                    );
 
-                var actuallyTaken = Mth.ceil(mediaAbleToCastFromHP - (this.caster.getHealth() * mediaToHealth));
+                    actuallyTaken = Mth.ceil(mediaAbleToCastFromHP - (this.caster.getHealth() * mediaToHealth));
+                }
 
                 HexAdvancementTriggers.OVERCAST_TRIGGER.trigger(this.caster, actuallyTaken);
                 this.caster.awardStat(HexStatistics.MEDIA_OVERCAST, actuallyTaken);
@@ -191,9 +198,26 @@ public abstract class PlayerBasedCastEnv extends CastingEnvironment {
         return costLeft;
     }
 
+    private int getMediaAvailableFromOvercast(double healthToRemove, double mediaToHealth) {
+        if (this.usesCreateDeployerVirtualOvercast()) {
+            return Mth.ceil(Math.min(this.caster.getMaxHealth(), healthToRemove) * mediaToHealth);
+        }
+
+        if (this.caster.isInvulnerableTo(this.caster.damageSources().source(HexDamageTypes.OVERCAST))) {
+            return 0;
+        }
+
+        return Mth.ceil(Math.min(this.caster.getHealth(), healthToRemove) * mediaToHealth);
+    }
+
+    private boolean usesCreateDeployerVirtualOvercast() {
+        return HexConfig.server().createDeployerOvercastUsesVirtualHealth()
+            && CREATE_DEPLOYER_FAKE_PLAYER.equals(this.caster.getClass().getName());
+    }
+
     protected boolean canOvercast() {
         var adv = this.world.getServer().getAdvancements().get(modLoc("y_u_no_cast_angy"));
-        if(adv != null) {
+        if (adv != null) {
             var advs = this.caster.getAdvancements();
             return advs.getOrStartProgress(adv).isDone();
         }

@@ -45,6 +45,8 @@ public class HexConfig {
 
         boolean invertSpellbookScrollDirection();
 
+        boolean scrollInPatchouliBooksTurnsPages();
+
         boolean invertAbacusScrollDirection();
 
         double gridSnapThreshold();
@@ -56,6 +58,7 @@ public class HexConfig {
         boolean DEFAULT_CTRL_TOGGLES_OFF_STROKE_ORDER = false;
         boolean DEFAULT_DISABLE_INWORLD_SCROLLING = false;
         boolean DEFAULT_INVERT_SPELLBOOK_SCROLL = false;
+        boolean DEFAULT_SCROLL_IN_PATCHOULI_BOOKS_TURNS_PAGES = true;
         boolean DEFAULT_INVERT_ABACUS_SCROLL = false;
         double DEFAULT_GRID_SNAP_THRESHOLD = 0.5;
         boolean DEFAULT_CLICKING_TOGGLES_DRAWING = false;
@@ -82,6 +85,12 @@ public class HexConfig {
 
         boolean trueNameHasAmbit();
 
+        boolean createDeployerOvercastUsesVirtualHealth();
+
+        double pehkuiMinScale();
+
+        double pehkuiMaxScale();
+
         double traderScrollChance();
 
         int DEFAULT_MAX_OP_COUNT = 100_000;
@@ -96,6 +105,12 @@ public class HexConfig {
         List<String> DEFAULT_DIM_TP_DENYLIST = List.of("twilightforest:twilight_forest");
 
         boolean DEFAULT_TRUE_NAME_HAS_AMBIT = true;
+
+        boolean DEFAULT_CREATE_DEPLOYER_OVERCAST_USES_VIRTUAL_HEALTH = true;
+        double MIN_ALLOWED_PEHKUI_SCALE = 1.0 / 32.0;
+        double MAX_ALLOWED_PEHKUI_SCALE = 8.0;
+        double DEFAULT_PEHKUI_MIN_SCALE = MIN_ALLOWED_PEHKUI_SCALE;
+        double DEFAULT_PEHKUI_MAX_SCALE = MAX_ALLOWED_PEHKUI_SCALE;
 
         default Tier opBreakHarvestLevel() {
             return switch (this.opBreakHarvestLevelBecauseForgeThoughtItWasAGoodIdeaToImplementHarvestTiersUsingAnHonestToGodTopoSort()) {

@@ -80,6 +80,7 @@ public class ForgeHexConfig implements HexConfig.CommonConfigAccess {
     public static class Client implements HexConfig.ClientConfigAccess {
         private static ModConfigSpec.BooleanValue ctrlTogglesOffStrokeOrder;
         private static ModConfigSpec.BooleanValue invertSpellbookScrollDirection;
+        private static ModConfigSpec.BooleanValue scrollInPatchouliBooksTurnsPages;
         private static ModConfigSpec.BooleanValue invertAbacusScrollDirection;
         private static ModConfigSpec.DoubleValue gridSnapThreshold;
         private static ModConfigSpec.BooleanValue clickingTogglesDrawing;
@@ -87,29 +88,38 @@ public class ForgeHexConfig implements HexConfig.CommonConfigAccess {
         private static ModConfigSpec.BooleanValue staticActiveSlates;
 
         public Client(ModConfigSpec.Builder builder) {
-            ctrlTogglesOffStrokeOrder = builder.comment(
-                    "Whether the ctrl key will instead turn *off* the color gradient on patterns")
+            ctrlTogglesOffStrokeOrder = builder
+                .translation("text.autoconfig.hexcasting.option.client.ctrlTogglesOffStrokeOrder")
+                .comment("Whether the ctrl key will instead turn *off* the color gradient on patterns")
                 .define("ctrlTogglesOffStrokeOrder", DEFAULT_CTRL_TOGGLES_OFF_STROKE_ORDER);
-            disableInworldScrolling = builder.comment(
-                    "Disable scrolling input for spellbooks and abaci in the normal world, keeping keybinds and staff screen scrolling normal")
+            disableInworldScrolling = builder
+                .translation("text.autoconfig.hexcasting.option.client.disableInworldScrolling")
+                .comment("Disable scrolling input for spellbooks and abaci in the normal world, keeping keybinds and staff screen scrolling normal")
                 .define("disableInworldScrolling", DEFAULT_DISABLE_INWORLD_SCROLLING);
-            invertSpellbookScrollDirection = builder.comment(
-                    "Whether scrolling up (as opposed to down) will increase the page index of the spellbook, and " +
-                        "vice versa")
+            invertSpellbookScrollDirection = builder
+                .translation("text.autoconfig.hexcasting.option.client.invertSpellbookScrollDirection")
+                .comment("Whether scrolling up (as opposed to down) will increase the page index of the spellbook, and vice versa")
                 .define("invertSpellbookScrollDirection", DEFAULT_INVERT_SPELLBOOK_SCROLL);
-            invertAbacusScrollDirection = builder.comment(
-                    "Whether scrolling up (as opposed to down) will increase the value of the abacus, and vice versa")
+            scrollInPatchouliBooksTurnsPages = builder
+                .translation("text.autoconfig.hexcasting.option.client.scrollInPatchouliBooksTurnsPages")
+                .comment("Whether vertical mouse scrolling in Patchouli books turns pages")
+                .define("scrollInPatchouliBooksTurnsPages", DEFAULT_SCROLL_IN_PATCHOULI_BOOKS_TURNS_PAGES);
+            invertAbacusScrollDirection = builder
+                .translation("text.autoconfig.hexcasting.option.client.invertAbacusScrollDirection")
+                .comment("Whether scrolling up (as opposed to down) will increase the value of the abacus, and vice versa")
                 .define("invertAbacusScrollDirection", DEFAULT_INVERT_ABACUS_SCROLL);
-            gridSnapThreshold = builder.comment(
-                    "When using a staff, the distance from one dot you have to go to snap to the next dot, where 0.5 " +
-                        "means 50% of the way.")
+            gridSnapThreshold = builder
+                .translation("text.autoconfig.hexcasting.option.client.gridSnapThreshold")
+                .comment("When using a staff, the distance from one dot you have to go to snap to the next dot, where 0.5 means 50% of the way.")
                 .defineInRange("gridSnapThreshold", DEFAULT_GRID_SNAP_THRESHOLD, 0.5, 1.0);
-            clickingTogglesDrawing = builder.comment(
-                            "Whether you click to start and stop drawing instead of clicking and dragging")
-                    .define("clickingTogglesDrawing", DEFAULT_CLICKING_TOGGLES_DRAWING);
-            staticActiveSlates = builder.comment(
-                            "Whether patterns on active slates should be rendered without wobble (improves performance with lots of active slates)")
-                    .define("staticActiveSlates", DEFAULT_STATIC_ACTIVE_SLATES);
+            clickingTogglesDrawing = builder
+                .translation("text.autoconfig.hexcasting.option.client.clickingTogglesDrawing")
+                .comment("Whether you click to start and stop drawing instead of clicking and dragging")
+                .define("clickingTogglesDrawing", DEFAULT_CLICKING_TOGGLES_DRAWING);
+            staticActiveSlates = builder
+                .translation("text.autoconfig.hexcasting.option.client.staticActiveSlates")
+                .comment("Whether patterns on active slates should be rendered without wobble (improves performance with lots of active slates)")
+                .define("staticActiveSlates", DEFAULT_STATIC_ACTIVE_SLATES);
         }
 
         @Override
@@ -120,6 +130,11 @@ public class ForgeHexConfig implements HexConfig.CommonConfigAccess {
         @Override
         public boolean invertSpellbookScrollDirection() {
             return invertSpellbookScrollDirection.get();
+        }
+
+        @Override
+        public boolean scrollInPatchouliBooksTurnsPages() {
+            return scrollInPatchouliBooksTurnsPages.get();
         }
 
         @Override
@@ -157,6 +172,9 @@ public class ForgeHexConfig implements HexConfig.CommonConfigAccess {
         private static ModConfigSpec.BooleanValue villagersOffendedByMindMurder;
         private static ModConfigSpec.ConfigValue<List<? extends String>> tpDimDenyList;
         private static ModConfigSpec.BooleanValue doesTrueNameHaveAmbit;
+        private static ModConfigSpec.BooleanValue createDeployerOvercastUsesVirtualHealth;
+        private static ModConfigSpec.DoubleValue pehkuiMinScale;
+        private static ModConfigSpec.DoubleValue pehkuiMaxScale;
         private static ModConfigSpec.DoubleValue traderScrollChance;
 
         private static ModConfigSpec.ConfigValue<List<? extends String>> fewScrollTables;
@@ -211,6 +229,21 @@ public class ForgeHexConfig implements HexConfig.CommonConfigAccess {
             doesTrueNameHaveAmbit = builder.comment(
                     "When false, makes player reference iotas behave as normal entity reference iotas")
                 .define("doesTrueNameHaveAmbit", DEFAULT_TRUE_NAME_HAS_AMBIT);
+
+            builder.push("Interop");
+            createDeployerOvercastUsesVirtualHealth = builder
+                .translation("text.autoconfig.hexcasting.option.server.createDeployerOvercastUsesVirtualHealth")
+                .comment("Whether Create deployers can pay overcast media costs from a per-cast virtual health pool")
+                .define("createDeployerOvercastUsesVirtualHealth", DEFAULT_CREATE_DEPLOYER_OVERCAST_USES_VIRTUAL_HEALTH);
+            pehkuiMinScale = builder
+                .translation("text.autoconfig.hexcasting.option.server.pehkuiMinScale")
+                .comment("Minimum entity scale Hex Casting can set through Pehkui/Gulliver interop")
+                .defineInRange("pehkuiMinScale", DEFAULT_PEHKUI_MIN_SCALE, MIN_ALLOWED_PEHKUI_SCALE, MAX_ALLOWED_PEHKUI_SCALE);
+            pehkuiMaxScale = builder
+                .translation("text.autoconfig.hexcasting.option.server.pehkuiMaxScale")
+                .comment("Maximum entity scale Hex Casting can set through Pehkui/Gulliver interop")
+                .defineInRange("pehkuiMaxScale", DEFAULT_PEHKUI_MAX_SCALE, MIN_ALLOWED_PEHKUI_SCALE, MAX_ALLOWED_PEHKUI_SCALE);
+            builder.pop();
         }
 
         @Override
@@ -254,6 +287,21 @@ public class ForgeHexConfig implements HexConfig.CommonConfigAccess {
         @Override
         public boolean trueNameHasAmbit() {
             return doesTrueNameHaveAmbit.get();
+        }
+
+        @Override
+        public boolean createDeployerOvercastUsesVirtualHealth() {
+            return createDeployerOvercastUsesVirtualHealth.get();
+        }
+
+        @Override
+        public double pehkuiMinScale() {
+            return Math.min(pehkuiMinScale.get(), pehkuiMaxScale.get());
+        }
+
+        @Override
+        public double pehkuiMaxScale() {
+            return Math.max(pehkuiMinScale.get(), pehkuiMaxScale.get());
         }
 
         @Override
