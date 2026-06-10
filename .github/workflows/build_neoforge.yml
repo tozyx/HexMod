@@ -1,9 +1,6 @@
 name: Build NeoForge jar
 
 on:
-  push:
-    branches:
-      - neo-1.21-fork
   workflow_dispatch:
 
 permissions:
