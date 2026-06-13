@@ -208,6 +208,8 @@ public class FabricHexConfig extends PartitioningSerializer.GlobalData {
         @ConfigEntry.Gui.Tooltip
         private boolean createDeployerOvercastUsesVirtualHealth = DEFAULT_CREATE_DEPLOYER_OVERCAST_USES_VIRTUAL_HEALTH;
         @ConfigEntry.Gui.Tooltip
+        private long createDeployerVirtualOvercastMaxCost = DEFAULT_CREATE_DEPLOYER_VIRTUAL_OVERCAST_MAX_COST;
+        @ConfigEntry.Gui.Tooltip
         private double pehkuiMinScale = DEFAULT_PEHKUI_MIN_SCALE;
         @ConfigEntry.Gui.Tooltip
         private double pehkuiMaxScale = DEFAULT_PEHKUI_MAX_SCALE;
@@ -252,6 +254,7 @@ public class FabricHexConfig extends PartitioningSerializer.GlobalData {
         public void validatePostLoad() throws ValidationException {
             this.maxOpCount = Math.max(this.maxOpCount, 0);
             this.maxSpellCircleLength = Math.max(this.maxSpellCircleLength, 4);
+            this.createDeployerVirtualOvercastMaxCost = Math.max(this.createDeployerVirtualOvercastMaxCost, 0);
             this.traderScrollChance = Mth.clamp(this.traderScrollChance, 0.0, 1.0);
             this.pehkuiMinScale = Mth.clamp(this.pehkuiMinScale, MIN_ALLOWED_PEHKUI_SCALE, MAX_ALLOWED_PEHKUI_SCALE);
             this.pehkuiMaxScale = Mth.clamp(this.pehkuiMaxScale, MIN_ALLOWED_PEHKUI_SCALE, MAX_ALLOWED_PEHKUI_SCALE);
@@ -345,6 +348,11 @@ public class FabricHexConfig extends PartitioningSerializer.GlobalData {
         @Override
         public boolean createDeployerOvercastUsesVirtualHealth() {
             return createDeployerOvercastUsesVirtualHealth;
+        }
+
+        @Override
+        public long createDeployerVirtualOvercastMaxCost() {
+            return createDeployerVirtualOvercastMaxCost;
         }
 
         @Override

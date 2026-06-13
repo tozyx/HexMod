@@ -87,6 +87,8 @@ public class HexConfig {
 
         boolean createDeployerOvercastUsesVirtualHealth();
 
+        long createDeployerVirtualOvercastMaxCost();
+
         double pehkuiMinScale();
 
         double pehkuiMaxScale();
@@ -107,6 +109,7 @@ public class HexConfig {
         boolean DEFAULT_TRUE_NAME_HAS_AMBIT = true;
 
         boolean DEFAULT_CREATE_DEPLOYER_OVERCAST_USES_VIRTUAL_HEALTH = true;
+        long DEFAULT_CREATE_DEPLOYER_VIRTUAL_OVERCAST_MAX_COST = (long) (20.0 * CommonConfigAccess.DEFAULT_MEDIA_TO_HEALTH_RATE);
         double MIN_ALLOWED_PEHKUI_SCALE = 1.0 / 32.0;
         double MAX_ALLOWED_PEHKUI_SCALE = 8.0;
         double DEFAULT_PEHKUI_MIN_SCALE = MIN_ALLOWED_PEHKUI_SCALE;

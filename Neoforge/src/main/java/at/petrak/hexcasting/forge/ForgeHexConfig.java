@@ -173,6 +173,7 @@ public class ForgeHexConfig implements HexConfig.CommonConfigAccess {
         private static ModConfigSpec.ConfigValue<List<? extends String>> tpDimDenyList;
         private static ModConfigSpec.BooleanValue doesTrueNameHaveAmbit;
         private static ModConfigSpec.BooleanValue createDeployerOvercastUsesVirtualHealth;
+        private static ModConfigSpec.LongValue createDeployerVirtualOvercastMaxCost;
         private static ModConfigSpec.DoubleValue pehkuiMinScale;
         private static ModConfigSpec.DoubleValue pehkuiMaxScale;
         private static ModConfigSpec.DoubleValue traderScrollChance;
@@ -235,6 +236,14 @@ public class ForgeHexConfig implements HexConfig.CommonConfigAccess {
                 .translation("text.autoconfig.hexcasting.option.server.createDeployerOvercastUsesVirtualHealth")
                 .comment("Whether Create deployers can pay overcast media costs from a per-cast virtual health pool")
                 .define("createDeployerOvercastUsesVirtualHealth", DEFAULT_CREATE_DEPLOYER_OVERCAST_USES_VIRTUAL_HEALTH);
+            createDeployerVirtualOvercastMaxCost = builder
+                .translation("text.autoconfig.hexcasting.option.server.createDeployerVirtualOvercastMaxCost")
+                .comment(
+                    "Maximum cumulative media cost a Create deployer can pay from virtual overcast during one cast before failing and breaking",
+                    "Media units: 10000 = 1 Amethyst Dust, 50000 = 1 Amethyst Shard, 100000 = 1 Charged Amethyst.",
+                    "Default 200000 = 20 Dust = 2 Charged Amethyst = 10 hearts of virtual overcast budget."
+                )
+                .defineInRange("createDeployerVirtualOvercastMaxCost", DEFAULT_CREATE_DEPLOYER_VIRTUAL_OVERCAST_MAX_COST, 0, Long.MAX_VALUE);
             pehkuiMinScale = builder
                 .translation("text.autoconfig.hexcasting.option.server.pehkuiMinScale")
                 .comment("Minimum entity scale Hex Casting can set through Pehkui/Gulliver interop")
@@ -292,6 +301,11 @@ public class ForgeHexConfig implements HexConfig.CommonConfigAccess {
         @Override
         public boolean createDeployerOvercastUsesVirtualHealth() {
             return createDeployerOvercastUsesVirtualHealth.get();
+        }
+
+        @Override
+        public long createDeployerVirtualOvercastMaxCost() {
+            return createDeployerVirtualOvercastMaxCost.get();
         }
 
         @Override

@@ -27,6 +27,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +43,8 @@ import static at.petrak.hexcasting.api.utils.HexUtils.isOfTag;
  */
 public abstract class PlayerBasedCastEnv extends CastingEnvironment {
     private static final String CREATE_DEPLOYER_FAKE_PLAYER = "com.simibubi.create.content.kinetics.deployer.DeployerFakePlayer";
+    private static final String CREATE_DEPLOYER_BLOCK_ENTITY = "com.simibubi.create.content.kinetics.deployer.DeployerBlockEntity";
+    private static final int CREATE_DEPLOYER_BLOCK_SEARCH_RADIUS = 6;
 
     public static final double DEFAULT_AMBIT_RADIUS = 32.0;
     private double ambitRadius;
@@ -50,6 +53,10 @@ public abstract class PlayerBasedCastEnv extends CastingEnvironment {
 
     protected final ServerPlayer caster;
     protected final InteractionHand castingHand;
+    private final boolean useCreateDeployerVirtualOvercast;
+    private final long createDeployerVirtualOvercastMaxCost;
+    private long createDeployerVirtualOvercastSpentThisCast;
+    private boolean brokeCreateDeployerForVirtualOvercastLimit;
 
     protected PlayerBasedCastEnv(ServerPlayer caster, InteractionHand castingHand) {
         super(caster.serverLevel());
@@ -57,6 +64,14 @@ public abstract class PlayerBasedCastEnv extends CastingEnvironment {
         this.castingHand = castingHand;
         this.ambitRadius = caster.getAttributeValue(HexAttributes.AMBIT_RADIUS);
         this.sentinelRadius = caster.getAttributeValue(HexAttributes.SENTINEL_RADIUS);
+
+        var serverConfig = HexConfig.server();
+        this.useCreateDeployerVirtualOvercast = serverConfig != null
+            && serverConfig.createDeployerOvercastUsesVirtualHealth()
+            && CREATE_DEPLOYER_FAKE_PLAYER.equals(caster.getClass().getName());
+        this.createDeployerVirtualOvercastMaxCost = serverConfig != null
+            ? serverConfig.createDeployerVirtualOvercastMaxCost()
+            : HexConfig.ServerConfigAccess.DEFAULT_CREATE_DEPLOYER_VIRTUAL_OVERCAST_MAX_COST;
     }
 
     @Override
@@ -159,14 +174,23 @@ public abstract class PlayerBasedCastEnv extends CastingEnvironment {
         }
 
         if (costLeft > 0 && allowOvercast) {
+            var costToPayFromCreateDeployerVirtualOvercast = costLeft;
+            var usesCreateDeployerVirtualOvercast = this.usesCreateDeployerVirtualOvercast();
+            if (usesCreateDeployerVirtualOvercast
+                && this.wouldExceedCreateDeployerVirtualOvercastLimit(costToPayFromCreateDeployerVirtualOvercast)) {
+                this.breakCreateDeployerForVirtualOvercastLimit(simulate);
+                return costLeft;
+            }
+
             double mediaToHealth = HexConfig.common().mediaToHealthRate();
             double healthToRemove = Math.max(costLeft / mediaToHealth, 0.5);
             if (simulate) {
                 costLeft -= this.getMediaAvailableFromOvercast(healthToRemove, mediaToHealth);
             } else {
                 int actuallyTaken;
-                if (this.usesCreateDeployerVirtualOvercast()) {
+                if (usesCreateDeployerVirtualOvercast) {
                     actuallyTaken = this.getMediaAvailableFromOvercast(healthToRemove, mediaToHealth);
+                    this.createDeployerVirtualOvercastSpentThisCast += costToPayFromCreateDeployerVirtualOvercast;
                 } else {
                     var mediaAbleToCastFromHP = this.caster.getHealth() * mediaToHealth;
 
@@ -198,6 +222,56 @@ public abstract class PlayerBasedCastEnv extends CastingEnvironment {
         return costLeft;
     }
 
+    private boolean wouldExceedCreateDeployerVirtualOvercastLimit(long cost) {
+        return cost > this.createDeployerVirtualOvercastMaxCost - this.createDeployerVirtualOvercastSpentThisCast;
+    }
+
+    private void breakCreateDeployerForVirtualOvercastLimit(boolean simulate) {
+        if (simulate || this.brokeCreateDeployerForVirtualOvercastLimit) {
+            return;
+        }
+
+        this.brokeCreateDeployerForVirtualOvercastLimit = true;
+        var deployerPos = this.findCreateDeployerBlock();
+        if (deployerPos != null) {
+            this.world.destroyBlock(deployerPos, true, this.caster);
+        }
+    }
+
+    private @Nullable BlockPos findCreateDeployerBlock() {
+        var center = this.caster.blockPosition();
+        var min = center.offset(
+            -CREATE_DEPLOYER_BLOCK_SEARCH_RADIUS,
+            -CREATE_DEPLOYER_BLOCK_SEARCH_RADIUS,
+            -CREATE_DEPLOYER_BLOCK_SEARCH_RADIUS
+        );
+        var max = center.offset(
+            CREATE_DEPLOYER_BLOCK_SEARCH_RADIUS,
+            CREATE_DEPLOYER_BLOCK_SEARCH_RADIUS,
+            CREATE_DEPLOYER_BLOCK_SEARCH_RADIUS
+        );
+
+        for (var pos : BlockPos.betweenClosed(min, max)) {
+            var blockEntity = this.world.getBlockEntity(pos);
+            if (blockEntity != null
+                && CREATE_DEPLOYER_BLOCK_ENTITY.equals(blockEntity.getClass().getName())
+                && this.isCasterCreateDeployerPlayer(blockEntity)) {
+                return blockEntity.getBlockPos();
+            }
+        }
+
+        return null;
+    }
+
+    private boolean isCasterCreateDeployerPlayer(BlockEntity blockEntity) {
+        try {
+            var getPlayer = blockEntity.getClass().getMethod("getPlayer");
+            return getPlayer.invoke(blockEntity) == this.caster;
+        } catch (ReflectiveOperationException | SecurityException e) {
+            return false;
+        }
+    }
+
     private int getMediaAvailableFromOvercast(double healthToRemove, double mediaToHealth) {
         if (this.usesCreateDeployerVirtualOvercast()) {
             return Mth.ceil(Math.min(this.caster.getMaxHealth(), healthToRemove) * mediaToHealth);
@@ -211,8 +285,7 @@ public abstract class PlayerBasedCastEnv extends CastingEnvironment {
     }
 
     private boolean usesCreateDeployerVirtualOvercast() {
-        return HexConfig.server().createDeployerOvercastUsesVirtualHealth()
-            && CREATE_DEPLOYER_FAKE_PLAYER.equals(this.caster.getClass().getName());
+        return this.useCreateDeployerVirtualOvercast;
     }
 
     protected boolean canOvercast() {
