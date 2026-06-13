@@ -201,3 +201,5 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+/libs/[咒法前置]paucal-0.7.1-noelle+1.21.1-neoforge.jar
+/downloaded-mods/Pehkui-3.8.3+1.21-neoforge.jar
