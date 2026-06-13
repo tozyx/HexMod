@@ -412,6 +412,11 @@
           "@Tooltip": "Whether Create deployers can pay overcast media costs from a per-cast virtual health pool",
           tooltip: "Whether Create deployers can pay overcast media costs from a per-cast virtual health pool",
         },
+        createDeployerVirtualOvercastMaxCost: {
+          "": "Create Deployer Overcast Budget",
+          "@Tooltip": "Maximum cumulative media cost a Create deployer can pay from virtual overcast during one cast before failing and breaking. Media units: 10000 = 1 Amethyst Dust, 50000 = 1 Amethyst Shard, 100000 = 1 Charged Amethyst. Default 200000 = 20 Dust = 2 Charged Amethyst = 10 hearts of virtual overcast budget.",
+          tooltip: "Maximum cumulative media cost a Create deployer can pay from virtual overcast during one cast before failing and breaking. Media units: 10000 = 1 Amethyst Dust, 50000 = 1 Amethyst Shard, 100000 = 1 Charged Amethyst. Default 200000 = 20 Dust = 2 Charged Amethyst = 10 hearts of virtual overcast budget.",
+        },
         pehkuiMinScale: {
           "": "Pehkui Minimum Scale",
           "@Tooltip": "Minimum entity scale Hex Casting can set through Pehkui/Gulliver interop",
