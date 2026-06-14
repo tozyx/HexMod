@@ -50,7 +50,7 @@ public class EntityIota extends Iota {
         return entityId;
     }
 
-    public Entity getEntity(ServerLevel level) {
+    public @Nullable Entity getEntity(ServerLevel level) {
         if (this.entityRef != null) {
             var entity = this.entityRef.get();
             if (entity != null && !entity.isRemoved() && entity.level() == level) {
